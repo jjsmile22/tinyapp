@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: true }));
 
 function generateRandomString() {
   // 6 random alpha numeric characters
-  return Math.random().toString(20).substring(2, 6)
+  return Math.random().toString(20).substring(2, 8)
   
 }
 
@@ -40,8 +40,15 @@ app.get("/u/:id", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  const {longURL} = req.body;
+
+  const newShortURL = generateRandomString();
+
+  urlDatabase[newShortURL] = req.body.longURL;
+  console.log(urlDatabase);
+  res.redirect('/urls/')
+
+
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -65,3 +72,5 @@ app.get("/set", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+console.log(urlDatabase);
