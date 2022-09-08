@@ -60,17 +60,15 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  
   delete urlDatabase[req.params.id];
   res.redirect('/urls')
+});
+
+app.post("/urls/:id/edit", (req, res) => {
   
-  // const {longURL} = req.body;
-
-  // const newShortURL = generateRandomString();
-
-  // urlDatabase[newShortURL] = req.body.longURL;
-  // console.log(urlDatabase);
-  // res.redirect(`/urls/${newShortURL}`)
+  const editedLongURL = req.body.longURL;
+  console.log(urlDatabase);
+  res.redirect('/urls/:id')
   
 
 });
