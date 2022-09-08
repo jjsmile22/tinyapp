@@ -3,7 +3,6 @@ const app = express();
 const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs");
-
 app.use(express.urlencoded({ extended: true }));
 
 function generateRandomString() {
@@ -34,24 +33,13 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
-app.get("/u/:id", (req, res) => {
-  const longURL = urlDatabase[req.params.id];
-  console.log('id:', req.params.id)
-  res.redirect(longURL);
-
-  
-});
-
 app.post("/urls", (req, res) => {
   const {longURL} = req.body;
-
   const newShortURL = generateRandomString();
 
   urlDatabase[newShortURL] = req.body.longURL;
   console.log(urlDatabase);
   res.redirect(`/urls/${newShortURL}`)
-  
-
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -59,16 +47,26 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id];
+  console.log('id:', req.params.id)
+  res.redirect(longURL);
+});
+
 app.post("/urls/:id/delete", (req, res) => {
+  console.log('inside delete');
   delete urlDatabase[req.params.id];
+  console.log(urlDatabase);
   res.redirect('/urls')
 });
 
 app.post("/urls/:id/edit", (req, res) => {
-  
+  console.log('inside edit');
   const editedLongURL = req.body.longURL;
   console.log(urlDatabase);
-  res.redirect('/urls/:id')
+  urlDatabase[req.params.id] = editedLongURL;
+  console.log(urlDatabase);
+  res.redirect('/urls/')
   
 
 });
@@ -87,7 +85,5 @@ app.get("/set", (req, res) => {
  });
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`Tinyapp listening on port ${PORT}!`);
 });
-
-console.log(urlDatabase);
