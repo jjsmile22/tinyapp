@@ -2,14 +2,15 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
+app.use(express.static('public'));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
-function generateRandomString() {
+const generateRandomString = () => {
   // 6 random alpha numeric characters
-  return Math.random().toString(20).substring(2, 8)
-  
-}
+  return Math.random().toString(20).substring(2, 8);
+
+};
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -34,12 +35,12 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  const {longURL} = req.body;
+  const { longURL } = req.body;
   const newShortURL = generateRandomString();
 
   urlDatabase[newShortURL] = req.body.longURL;
   console.log(urlDatabase);
-  res.redirect(`/urls/${newShortURL}`)
+  res.redirect(`/urls/${newShortURL}`);
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -49,7 +50,7 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
-  console.log('id:', req.params.id)
+  console.log('id:', req.params.id);
   res.redirect(longURL);
 });
 
@@ -57,7 +58,7 @@ app.post("/urls/:id/delete", (req, res) => {
   console.log('inside delete');
   delete urlDatabase[req.params.id];
   console.log(urlDatabase);
-  res.redirect('/urls')
+  res.redirect('/urls');
 });
 
 app.post("/urls/:id/edit", (req, res) => {
@@ -66,9 +67,44 @@ app.post("/urls/:id/edit", (req, res) => {
   console.log(urlDatabase);
   urlDatabase[req.params.id] = editedLongURL;
   console.log(urlDatabase);
-  res.redirect('/urls/')
-  
+  res.redirect('/urls/');
+});
 
+const userDatabaseIsh = {
+  'apple@ample.com': {
+    email: 'apple@ample.com',
+    name: 'apple',
+    password: 'orange'
+  }
+};
+
+const authUser = (email, password) => {
+  const currentUser = userDatabaseIsh[email];
+  if (!currentUser) {
+    console.log('Email Does Not Exist');
+    return {err: 'Email Does Not Exist', user: 'null'};
+  }
+
+  if (currentUser.password !== password) {
+    console.log('Email Does Not Match Password');
+    return {err: 'Email Does Not Exist', user: 'null'};
+  }
+
+  return {err: null, user: currentUser}
+
+}
+
+app.post("/login", (req, res) => {
+  const {email, password} = req.body;
+  const {err, user} = authUser(email, password);
+
+  if (err) {
+    console.log('error: ', err);
+    return res.redirect('/urls');
+  }
+
+ 
+  res.json(user);
 });
 
 app.get("/hello", (req, res) => {
@@ -78,11 +114,7 @@ app.get("/hello", (req, res) => {
 app.get("/set", (req, res) => {
   const a = 1;
   res.send(`a = ${a}`);
- });
- 
- app.get("/fetch", (req, res) => {
-  res.send(`a = ${a}`);
- });
+});
 
 app.listen(PORT, () => {
   console.log(`Tinyapp listening on port ${PORT}!`);
