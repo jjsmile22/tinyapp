@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
+const cookieParser = require('cookie-parser')
 
+app.use(cookieParser());
 app.use(express.static('public'));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -14,8 +16,15 @@ const generateRandomString = () => {
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "9sm5xK": "http://www.google.com",
 };
+
+const fetchUserByEmail = (email) => {
+  if (userDatabaseIsh[email]) {
+    return userDatabaseIsh[email];
+  }
+  return {};
+}
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -26,7 +35,9 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  console.log(req.cookies);
+  const currentUser = fetchUserByEmail(req.cookies.email);
+  const templateVars = { urls: urlDatabase, name: currentUser.name };
   res.render("urls_index", templateVars);
 });
 
@@ -71,11 +82,12 @@ app.post("/urls/:id/edit", (req, res) => {
 });
 
 const userDatabaseIsh = {
-  'apple@ample.com': {
-    email: 'apple@ample.com',
-    name: 'apple',
-    password: 'orange'
-  }
+ 'apple@ample.com': {
+  email: 'apple@ample.com',
+  password: 'orange',
+  name: 'apple'
+ }
+  
 };
 
 const authUser = (email, password) => {
@@ -103,8 +115,14 @@ app.post("/login", (req, res) => {
     return res.redirect('/urls');
   }
 
- 
-  res.json(user);
+  res.cookie('email', email)
+  res.redirect('/urls');
+});
+
+app.post("/logout", (req, res) => {
+
+ res.clearCookie('email')
+ res.redirect('/urls');
 });
 
 app.get("/hello", (req, res) => {
