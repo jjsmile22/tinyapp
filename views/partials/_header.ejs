@@ -19,6 +19,7 @@
       </div>
     </div>
     <section>
+      <% if (!name) { %>
     <form action="/login" method="POST" autocomplete="off">
       <label for="email">Email Adress:</label>
       <input type="email" name="email" placeholder="Enter Your Email">
@@ -26,6 +27,14 @@
       <input type="password" name="password" placeholder="password">
       <button type="submit">LOGIN</button>
       </form>
+      <% } %>
+
+      <% if (name) { %>
+      <form action="/logout" method="POST" autocomplete="off">
+        <label for="text">Logged In!</label>
+        <button type="submit">LOGOUT</button>
+        </form>
+        <% } %>
   </section>
   </nav>
 </header>
