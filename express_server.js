@@ -106,6 +106,11 @@ const authUser = (email, password) => {
 
 }
 
+app.get('/login', (req, res) => {
+
+  res.render('urls_login');
+});
+
 app.post("/login", (req, res) => {
 
 
@@ -130,10 +135,10 @@ app.post("/logout", (req, res) => {
 app.get('/register', (req, res) => {
   res.render('urls_register', {user: null});
 
-})
+});
 
 app.post('/register', (req, res) => {
-  const {email, password, name} = req.body;
+  const {email, password,} = req.body;
   if(!email || !password) {
     res.send("Invalid Password/Email! Please <a href='/register'>Try Again </a>");
   }
@@ -147,7 +152,7 @@ app.post('/register', (req, res) => {
   console.log(userDatabaseIsh);
 
 res.redirect('/urls')
-})
+});
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
