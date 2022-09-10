@@ -18,23 +18,15 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
+    <section style="margin: 1em;">
+      <a href='/register'>Register</a>
+    </section>
     <section>
-      <% if (!name) { %>
-    <form action="/login" method="POST" autocomplete="off">
-      <label for="email">Email Adress:</label>
-      <input type="email" name="email" placeholder="Enter Your Email">
-      <label for="password">Password:</label>
-      <input type="password" name="password" placeholder="password">
-      <button type="submit">LOGIN</button>
+      
+      <form action="/login" method="GET">
+        <button type="submit">LOGIN</button>
       </form>
-      <% } %>
-
-      <% if (name) { %>
-      <form action="/logout" method="POST" autocomplete="off">
-        <label for="text">Logged In!</label>
-        <button type="submit">LOGOUT</button>
-        </form>
-        <% } %>
+      
   </section>
   </nav>
 </header>
