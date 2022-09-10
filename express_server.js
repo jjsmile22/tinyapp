@@ -138,7 +138,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  const {email, password,} = req.body;
+  const {email, password, name} = req.body;
   if(!email || !password) {
     res.send("Invalid Password/Email! Please <a href='/register'>Try Again </a>");
   }
